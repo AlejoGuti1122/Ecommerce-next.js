@@ -24,15 +24,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // Verificamos si estamos en la ruta de landing
+  const isLandingPage =
+    typeof window !== "undefined" && window.location.pathname === "/landing"
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className="min-h-screen flex flex-col">
-          <Navbar />
+          {!isLandingPage && <Navbar />}
           <main className="flex-grow">{children}</main>
-          <Footer />
+          {!isLandingPage && <Footer />}
         </div>
       </body>
     </html>

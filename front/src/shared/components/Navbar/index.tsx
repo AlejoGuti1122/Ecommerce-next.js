@@ -79,7 +79,7 @@ const Navbar = () => {
               <FaShoppingCart className="text-xl" />
             </Link>
             <Link
-              href="/profile"
+              href="/dashboard"
               className="hover:text-purple-400 transition-colors"
             >
               <FaUser className="text-xl" />
