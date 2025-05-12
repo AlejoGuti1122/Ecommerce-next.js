@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { IProduct } from "@/interfaces"
 
-const sampleProduct: IProduct = {
+// Datos de ejemplo
+export const sampleProduct: IProduct = {
   id: 1,
   name: "MacBook Pro M2",
   price: 1299,
@@ -15,11 +16,16 @@ const sampleProduct: IProduct = {
   stock: 10,
 }
 
-const Detail = () => {
+interface DetailProps {
+  product: IProduct
+}
+
+const Detail = ({ product }: DetailProps) => {
   const [quantity, setQuantity] = useState(1)
 
   const incrementQuantity = () => {
-    if (quantity < sampleProduct.stock) {
+    if (quantity < product.stock) {
+      // Cambiamos sampleProduct por product
       setQuantity((prev) => prev + 1)
     }
   }
@@ -31,14 +37,13 @@ const Detail = () => {
   }
 
   const handleAddToCart = () => {
-    // Aquí irá la lógica para agregar al carrito
     console.log("Agregando al carrito:", {
-      product: sampleProduct,
-      quantity: quantity,
+      product, // Usamos product en lugar de sampleProduct
+      quantity,
     })
   }
 
-  const subtotal = quantity * sampleProduct.price
+  const subtotal = quantity * product.price
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -46,36 +51,32 @@ const Detail = () => {
         {/* Columna de imagen */}
         <div className="relative group">
           <img
-            src={sampleProduct.image}
-            alt={sampleProduct.name}
+            src={product.image}
+            alt={product.name}
             className="w-full rounded-lg shadow-lg object-cover transition-transform 
               duration-300 group-hover:scale-105"
           />
           <span
             className={`absolute top-4 right-4 px-3 py-1 rounded-full text-sm
-            ${
-              sampleProduct.stock > 0 ? "bg-green-500" : "bg-red-500"
-            } text-white`}
+            ${product.stock > 0 ? "bg-green-500" : "bg-red-500"} text-white`}
           >
-            Stock: {sampleProduct.stock}
+            Stock: {product.stock}
           </span>
         </div>
 
         {/* Columna de detalles */}
         <div className="space-y-6">
-          <h1 className="text-3xl font-bold text-gray-900">
-            {sampleProduct.name}
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
 
           <div className="flex items-baseline">
             <span className="text-3xl font-bold text-blue-600">
-              ${sampleProduct.price}
+              ${product.price}
             </span>
             <span className="ml-2 text-sm text-gray-500">USD</span>
           </div>
 
           <p className="text-gray-600 text-lg leading-relaxed">
-            {sampleProduct.description}
+            {product.description}
           </p>
 
           {/* Contador y botón de agregar */}
@@ -92,7 +93,7 @@ const Detail = () => {
               <span className="text-xl font-semibold">{quantity}</span>
               <button
                 onClick={incrementQuantity}
-                disabled={quantity >= sampleProduct.stock}
+                disabled={quantity >= product.stock}
                 className="bg-gray-100 px-4 py-2 rounded-lg hover:bg-gray-200
                   disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -106,7 +107,7 @@ const Detail = () => {
 
             <button
               onClick={handleAddToCart}
-              disabled={sampleProduct.stock === 0}
+              disabled={product.stock === 0}
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg
                 hover:bg-blue-700 transition-all duration-200
                 flex items-center justify-center space-x-2
