@@ -1,4 +1,5 @@
 "use client"
+import Button from "@/features/home/components/ButtonLanding"
 import { Card } from "@/features/home/components/Card"
 import Section2 from "@/features/home/components/Section2"
 
@@ -17,6 +18,8 @@ export default function Home() {
           <Card />
         </div>
       </section>
+      <Button />
     </main>
   )
 }
+                          

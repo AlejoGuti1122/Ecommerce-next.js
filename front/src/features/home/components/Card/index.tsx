@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 import { IProduct } from "@/interfaces"
+import Link from "next/link"
 
 // Datos de ejemplo de productos
 const sampleProducts: IProduct[] = [
@@ -107,12 +108,14 @@ export function Card() {
               {product.description}
             </p>
 
-            <button
-              className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 
+            <Link href="/product-detail">
+              <button
+                className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 
               text-white py-2 rounded-lg font-medium"
-            >
-              Ver Producto
-            </button>
+              >
+                Ver Producto
+              </button>
+            </Link>
           </div>
         </div>
       ))}

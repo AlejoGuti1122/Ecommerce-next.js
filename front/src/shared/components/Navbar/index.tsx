@@ -4,10 +4,10 @@ import {
   FaShoppingCart,
   FaUser,
   FaSearch,
-  FaMobileAlt,
-  FaLaptop,
-  FaTablet,
-  FaHeadphones,
+  // FaMobileAlt,
+  // FaLaptop,
+  // FaTablet,
+  // FaHeadphones,
 } from "react-icons/fa"
 
 const Navbar = () => {
@@ -20,14 +20,14 @@ const Navbar = () => {
             href="/"
             className="flex items-center space-x-2"
           >
-            <FaLaptop className="text-2xl text-blue-400" />
+           
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               TechZone
             </span>
           </Link>
 
           {/* Categorías */}
-          <div className="hidden md:flex items-center space-x-6">
+          {/* <div className="hidden md:flex items-center space-x-6">
             <Link
               href="/category/phones"
               className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
@@ -56,7 +56,7 @@ const Navbar = () => {
               <FaHeadphones />
               <span>Accesorios</span>
             </Link>
-          </div>
+          </div> */}
 
           {/* Barra de búsqueda */}
           <div className="hidden md:flex flex-1 max-w-md mx-6">
