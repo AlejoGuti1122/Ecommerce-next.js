@@ -6,7 +6,8 @@ const RegisterPage = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    address: "",
+    phone: "",
   })
   const [error, setError] = useState("")
 
@@ -18,10 +19,10 @@ const RegisterPage = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { name, email, password, confirmPassword } = formData
+    const { name, email, password, address, phone } = formData
 
     // Validaciones básicas
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !password || !address || !phone) {
       setError("Todos los campos son obligatorios")
       return
     }
@@ -31,21 +32,26 @@ const RegisterPage = () => {
       return
     }
 
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden")
+    if (password.length < 6) {
+      setError("La contraseña debe tener al menos 6 caracteres")
+      return
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      setError("El número de teléfono debe tener 10 dígitos")
       return
     }
 
     // Si pasa la validación
     setError("")
-    console.log("Submit exitoso")
+    console.log("Submit exitoso", formData)
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-8">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-3xl font-bold mb-6 text-center text-white">Crear Cuenta</h1>
-        <form onSubmit={handleSubmit}>
+        <form  onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium text-gray-300">
               Nombre Completo
@@ -89,17 +95,31 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300">
-              Confirmar Contraseña
+            <label htmlFor="address" className="block text-sm font-medium text-gray-300">
+              Dirección
             </label>
             <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Confirma tu contraseña"
+              placeholder="Ingresa tu dirección"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-300">
+              Teléfono
+            </label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="mt-1 block w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Ingresa tu número de teléfono"
             />
           </div>
           {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
