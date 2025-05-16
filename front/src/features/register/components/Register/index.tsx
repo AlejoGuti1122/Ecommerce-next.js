@@ -1,8 +1,20 @@
 "use client"
 import React, { useState } from "react"
+import { postRegister } from "@/services/auth"
+import { useRouter } from "next/navigation"
+import { toast } from "react-toastify"
+
+export interface IFormInput {
+  name: string
+  email: string
+  password: string
+  address: string
+  phone: string
+}
 
 const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+  const router = useRouter()
+  const [formData, setFormData] = useState<IFormInput>({
     name: "",
     email: "",
     password: "",
@@ -16,6 +28,28 @@ const RegisterPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  const onSubmit = async (data: IFormInput) => {
+    console.log("Datos enviados:", data)
+    try {
+      const response = await postRegister(data)
+      console.log("Respuesta del registro:", response)
+
+      // Mostrar notificación de éxito
+      toast.success("¡Registro exitoso!😁🎉😎🫡😌")
+      setError("")
+
+      // Redirigir al login después de 3 segundos
+      setTimeout(() => {
+        router.push("/login")
+      }, 3000)
+    } catch (e) {
+      console.error("Error al registrar el usuario:", e)
+
+      // Mostrar notificación de error
+      toast.error("No se completó el registro. Intenta nuevamente.")
+    }
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -24,36 +58,45 @@ const RegisterPage = () => {
     // Validaciones básicas
     if (!name || !email || !password || !address || !phone) {
       setError("Todos los campos son obligatorios")
+      toast.error("Todos los campos son obligatorios")
       return
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError("El correo electrónico no es válido")
+      toast.error("El correo electrónico no es válido")
       return
     }
 
     if (password.length < 6) {
       setError("La contraseña debe tener al menos 6 caracteres")
+      toast.error("La contraseña debe tener al menos 6 caracteres")
       return
     }
 
     if (!/^\d{10}$/.test(phone)) {
       setError("El número de teléfono debe tener 10 dígitos")
+      toast.error("El número de teléfono debe tener 10 dígitos")
       return
     }
 
-    // Si pasa la validación
+    // Si pasa la validación, llamamos a la función onSubmit
     setError("")
-    console.log("Submit exitoso", formData)
+    onSubmit(formData)
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 p-8">
       <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-6 text-center text-white">Crear Cuenta</h1>
-        <form  onSubmit={handleSubmit}>
+        <h1 className="text-3xl font-bold mb-6 text-center text-white">
+          Crear Cuenta
+        </h1>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-300"
+            >
               Nombre Completo
             </label>
             <input
@@ -67,7 +110,10 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-300"
+            >
               Correo Electrónico
             </label>
             <input
@@ -81,7 +127,10 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-300"
+            >
               Contraseña
             </label>
             <input
@@ -95,7 +144,10 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="address" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-300"
+            >
               Dirección
             </label>
             <input
@@ -109,7 +161,10 @@ const RegisterPage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-300">
+            <label
+              htmlFor="phone"
+              className="block text-sm font-medium text-gray-300"
+            >
               Teléfono
             </label>
             <input
@@ -132,7 +187,10 @@ const RegisterPage = () => {
         </form>
         <p className="mt-4 text-center text-gray-400 text-sm">
           ¿Ya tienes una cuenta?{" "}
-          <a href="#" className="text-blue-500 hover:underline">
+          <a
+            href="/login"
+            className="text-blue-500 hover:underline"
+          >
             Inicia Sesión
           </a>
         </p>

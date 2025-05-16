@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/shared/components/Navbar"
 import Footer from "@/shared/components/Footer"
+import { ToastContainer } from "react-toastify" // Importa ToastContainer
+import "react-toastify/dist/ReactToastify.css" // Importa los estilos de Toastify
+import { Slide } from "react-toastify" // Importa la animación Slide
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +41,20 @@ export default function RootLayout({
           <main className="flex-grow">{children}</main>
           {!isLandingPage && <Footer />}
         </div>
+        {/* Configuración de ToastContainer */}
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          limit={1}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover
+          theme="light"
+          transition={Slide}
+        />
       </body>
     </html>
   )
