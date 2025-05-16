@@ -1,14 +1,14 @@
-import { AppDataSource } from "../config/dataSource";
-import { Product } from "../entities/Product";
-import { ProductRepository } from "../repositories/product.repository";
+import { AppDataSource } from "../config/dataSource"
+import { Product } from "../entities/Product"
+import { ProductRepository } from "../repositories/product.repository"
 
 interface IProduct {
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  categoryId: number;
-  stock: number;
+  name: string
+  price: number
+  description: string
+  image: string
+  categoryId: number
+  stock: number
 }
 
 const productsToPreLoad: IProduct[] = [
@@ -18,7 +18,7 @@ const productsToPreLoad: IProduct[] = [
     description:
       "Experience power and elegance with the iPhone 11: capture stunning moments with its dual-camera system, enjoy exceptional performance, and immerse yourself in a brilliant Liquid Retina display. Discover a world of possibilities in the palm of your hand!",
     image:
-      "https://www.apple.com/v/iphone-11/a/images/meta/og__f2j3dwkzna2u.png",
+      "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6341/6341344_sd.jpg",
     categoryId: 1,
     stock: 10,
   },
@@ -72,15 +72,15 @@ const productsToPreLoad: IProduct[] = [
     categoryId: 6,
     stock: 10,
   },
-];
+]
 
 export const preLoadProducts = async () => {
-  const products = await ProductRepository.find();
+  const products = await ProductRepository.find()
   if (!products.length)
     await AppDataSource.createQueryBuilder()
       .insert()
       .into(Product)
       .values(productsToPreLoad)
-      .execute();
-  console.log("Products preloaded");
-};
+      .execute()
+  console.log("Products preloaded")
+}
