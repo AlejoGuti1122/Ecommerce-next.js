@@ -1,13 +1,14 @@
-import { logout } from "@/services/auth"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext"; // Importa el contexto de autenticación
 
 export default function LogoutButton() {
-  const router = useRouter()
+  const router = useRouter();
+  const { logout } = useAuth(); // Usa la función logout del contexto
 
   const handleLogout = () => {
-    logout() // Elimina la cookie
-    router.push("/login") // Redirige al login
-  }
+    logout(); // Llama a la función logout del contexto
+    router.push("/login"); // Redirige al login
+  };
 
   return (
     <button
@@ -16,5 +17,5 @@ export default function LogoutButton() {
     >
       Cerrar Sesión
     </button>
-  )
+  );
 }

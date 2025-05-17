@@ -33,11 +33,16 @@ export const postLogin = async (data: ILoginInput) => {
   try {
     const res = await axiosApiBack.post("/login", data)
 
-    // Verifica si el backend devuelve un token
+    // Verifica si el backend devuelve un token y datos del usuario
     const token = res.data.token
+    const user = res.data.user // Asegúrate de que el backend devuelva los datos del usuario
+
     if (token) {
       // Guarda el token en una cookie
       Cookies.set("authToken", token, { expires: 7 }) // Expira en 7 días
+
+      // Guarda los datos del usuario en localStorage
+      localStorage.setItem("user", JSON.stringify(user))
     }
 
     return res.data
@@ -53,8 +58,15 @@ export const isAuthenticated = (): boolean => {
   return !!token // Devuelve true si el token existe
 }
 
+// Obtener los datos del usuario desde localStorage
+export const getUserData = () => {
+  const user = localStorage.getItem("user")
+  return user ? JSON.parse(user) : null
+}
+
 // Cerrar sesión
 export const logout = () => {
-  Cookies.remove("authToken")
+  Cookies.remove("authToken") // Elimina el token de las cookies
+  localStorage.removeItem("user") // Elimina los datos del usuario de localStorage
   console.log("Sesión cerrada.")
 }

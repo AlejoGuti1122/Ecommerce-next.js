@@ -13,7 +13,7 @@ export interface ILoginInput {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { setAuthenticated } = useAuth() // Accede al método para actualizar el estado de autenticación
+  const { setAuthenticated, setUser } = useAuth() // Accede a setUser desde el contexto
   const [formData, setFormData] = useState<ILoginInput>({
     email: "",
     password: "",
@@ -32,32 +32,19 @@ export default function LoginPage() {
 
     const { email, password } = formData
 
-    // Validaciones básicas
     if (!email || !password) {
       setError("Todos los campos son obligatorios")
       toast.error("Todos los campos son obligatorios")
       return
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("El correo electrónico no es válido")
-      toast.error("El correo electrónico no es válido")
-      return
-    }
-
-    // Si pasa la validación, intentamos iniciar sesión
-    setError("")
     try {
-      const data = await postLogin(formData) // Usa postLogin
+      const data = await postLogin(formData) // Llama a postLogin
+      setAuthenticated(true) // Actualiza el estado global de autenticación
+      setUser(data.user) // Guarda los datos del usuario en el contexto
       toast.success("¡Inicio de sesión exitoso!")
-      console.log("Datos del usuario:", data)
-
-      // Actualiza el estado de autenticación
-      setAuthenticated(true)
-
-      // Redirigir a la página principal o home
-      router.push("/")
-    } catch (e: unknown) {
+      router.push("/") // Redirige al home o dashboard
+    } catch (e) {
       console.error("Error al iniciar sesión:", e)
       toast.error("Error al iniciar sesión. Verifica tus credenciales.")
     }

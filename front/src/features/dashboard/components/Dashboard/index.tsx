@@ -1,38 +1,22 @@
 "use client"
 
-import { Iuser, eOrderStatus, eRole } from "@/interfaces"
 import {
   FaUser,
   FaBox,
-  FaCog,
   FaEnvelope,
   FaPhone,
   FaMapMarkerAlt,
   FaBoxOpen,
 } from "react-icons/fa"
 import { useState } from "react"
-import LogoutButton from "@/features/dashboard/components/Button"
+import { eOrderStatus, Iuser } from "@/interfaces" // Importa la interfaz Iuser
+import LogoutButton from "../Button"
 
-// Usuario de ejemplo
-const sampleUser: Iuser = {
-  id: 1,
-  name: "Juan Pérez",
-  email: "juan@mail.com",
-  address: "Calle 123",
-  phone: "1234567890",
-  role: eRole.USER, // Cambiamos "user" por eRole.USER
-  orders: [
-    {
-      id: 1,
-      status: eOrderStatus.PENDING,
-      date: "2024-05-11",
-      products: [],
-      user: {} as Iuser,
-    },
-  ],
+interface UserDashboardProps {
+  user: Iuser // Define la prop user
 }
 
-const UserDashboard = () => {
+const UserDashboard = ({ user }: UserDashboardProps) => {
   const [activeTab, setActiveTab] = useState("profile")
 
   return (
@@ -43,7 +27,7 @@ const UserDashboard = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm opacity-80">Total Pedidos</p>
-              <h3 className="text-3xl font-bold">{sampleUser.orders.length}</h3>
+              <h3 className="text-3xl font-bold">{user.orders.length}</h3>
             </div>
             <FaBoxOpen className="text-4xl opacity-80" />
           </div>
@@ -55,7 +39,7 @@ const UserDashboard = () => {
               <p className="text-sm opacity-80">Pedidos Pendientes</p>
               <h3 className="text-3xl font-bold">
                 {
-                  sampleUser.orders.filter(
+                  user.orders.filter(
                     (order) => order.status === eOrderStatus.PENDING
                   ).length
                 }
@@ -99,16 +83,6 @@ const UserDashboard = () => {
           >
             <FaBox /> <span>Pedidos</span>
           </button>
-          <button
-            onClick={() => setActiveTab("settings")}
-            className={`flex items-center space-x-2 px-6 py-4 ${
-              activeTab === "settings"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-          >
-            <FaCog /> <span>Configuración</span>
-          </button>
         </div>
 
         <div className="p-6">
@@ -119,14 +93,14 @@ const UserDashboard = () => {
                   <FaUser className="text-blue-500 text-xl" />
                   <div>
                     <p className="text-sm text-gray-500">Nombre</p>
-                    <p className="font-medium">{sampleUser.name}</p>
+                    <p className="font-medium">{user.name}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                   <FaEnvelope className="text-blue-500 text-xl" />
                   <div>
                     <p className="text-sm text-gray-500">Email</p>
-                    <p className="font-medium">{sampleUser.email}</p>
+                    <p className="font-medium">{user.email}</p>
                   </div>
                 </div>
               </div>
@@ -135,14 +109,14 @@ const UserDashboard = () => {
                   <FaPhone className="text-blue-500 text-xl" />
                   <div>
                     <p className="text-sm text-gray-500">Teléfono</p>
-                    <p className="font-medium">{sampleUser.phone}</p>
+                    <p className="font-medium">{user.phone}</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                   <FaMapMarkerAlt className="text-blue-500 text-xl" />
                   <div>
                     <p className="text-sm text-gray-500">Dirección</p>
-                    <p className="font-medium">{sampleUser.address}</p>
+                    <p className="font-medium">{user.address}</p>
                   </div>
                 </div>
               </div>
@@ -151,7 +125,7 @@ const UserDashboard = () => {
 
           {activeTab === "orders" && (
             <div className="space-y-4">
-              {sampleUser.orders.map((order) => (
+              {user.orders.map((order) => (
                 <div
                   key={order.id}
                   className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
