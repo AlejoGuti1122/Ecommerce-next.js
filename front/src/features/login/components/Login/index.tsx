@@ -1,28 +1,66 @@
 "use client"
 import React, { useState } from "react"
+import { useRouter } from "next/navigation"
+import { toast } from "react-toastify"
+import { postLogin } from "@/services/auth" // Importa postLogin
+import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
 
-export default function   LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+// Interfaz para los datos del formulario de login
+export interface ILoginInput {
+  email: string
+  password: string
+}
+
+export default function LoginPage() {
+  const router = useRouter()
+  const { setAuthenticated } = useAuth() // Accede al método para actualizar el estado de autenticación
+  const [formData, setFormData] = useState<ILoginInput>({
+    email: "",
+    password: "",
+  })
   const [error, setError] = useState("")
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Función para manejar los cambios en los campos del formulario
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  // Función para manejar el envío del formulario
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Validación básica
+    const { email, password } = formData
+
+    // Validaciones básicas
     if (!email || !password) {
       setError("Todos los campos son obligatorios")
+      toast.error("Todos los campos son obligatorios")
       return
     }
 
     if (!/\S+@\S+\.\S+/.test(email)) {
       setError("El correo electrónico no es válido")
+      toast.error("El correo electrónico no es válido")
       return
     }
 
-    // Si pasa la validación
+    // Si pasa la validación, intentamos iniciar sesión
     setError("")
-    console.log("Submit exitoso")
+    try {
+      const data = await postLogin(formData) // Usa postLogin
+      toast.success("¡Inicio de sesión exitoso!")
+      console.log("Datos del usuario:", data)
+
+      // Actualiza el estado de autenticación
+      setAuthenticated(true)
+
+      // Redirigir a la página principal o home
+      router.push("/")
+    } catch (e: unknown) {
+      console.error("Error al iniciar sesión:", e)
+      toast.error("Error al iniciar sesión. Verifica tus credenciales.")
+    }
   }
 
   return (
@@ -42,8 +80,9 @@ export default function   LoginPage() {
             <input
               type="email"
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Ingresa tu correo"
             />
@@ -58,8 +97,9 @@ export default function   LoginPage() {
             <input
               type="password"
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               className="mt-1 block w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               placeholder="Ingresa tu contraseña"
             />
@@ -75,7 +115,7 @@ export default function   LoginPage() {
         <p className="mt-4 text-center text-gray-400 text-sm">
           ¿No tienes una cuenta?{" "}
           <a
-            href="#"
+            href="/register"
             className="text-blue-500 hover:underline"
           >
             Regístrate

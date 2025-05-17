@@ -6,6 +6,7 @@ import Footer from "@/shared/components/Footer"
 import { ToastContainer } from "react-toastify" // Importa ToastContainer
 import "react-toastify/dist/ReactToastify.css" // Importa los estilos de Toastify
 import { Slide } from "react-toastify" // Importa la animación Slide
+import { AuthProvider } from "@/context/authContext"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,25 +37,28 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="min-h-screen flex flex-col">
-          {!isLandingPage && <Navbar />}
-          <main className="flex-grow">{children}</main>
-          {!isLandingPage && <Footer />}
-        </div>
-        {/* Configuración de ToastContainer */}
-        <ToastContainer
-          position="top-right"
-          autoClose={2000}
-          limit={1}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          pauseOnFocusLoss={false}
-          draggable={false}
-          pauseOnHover
-          theme="light"
-          transition={Slide}
-        />
+        <AuthProvider>
+          <div className="min-h-screen flex flex-col">
+            {!isLandingPage && <Navbar />}
+
+            <main className="flex-grow">{children}</main>
+            {!isLandingPage && <Footer />}
+          </div>
+          {/* Configuración de ToastContainer */}
+          <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            limit={1}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            pauseOnFocusLoss={false}
+            draggable={false}
+            pauseOnHover
+            theme="light"
+            transition={Slide}
+          />
+        </AuthProvider>
       </body>
     </html>
   )

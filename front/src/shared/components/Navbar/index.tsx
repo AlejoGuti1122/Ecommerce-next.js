@@ -1,16 +1,28 @@
 "use client"
 import Link from "next/link"
-import {
-  FaShoppingCart,
-  FaUser,
-  FaSearch,
-  // FaMobileAlt,
-  // FaLaptop,
-  // FaTablet,
-  // FaHeadphones,
-} from "react-icons/fa"
+import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
+import { logout } from "@/services/auth" // Importa la función de logout
+import { useRouter } from "next/navigation"
+import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
 
 const Navbar = () => {
+  const { isAuthenticated, setAuthenticated } = useAuth() // Accede al estado de autenticación
+  const router = useRouter()
+
+  const handleLogout = () => {
+    logout() // Elimina la cookie del token
+    setAuthenticated(false) // Actualiza el estado de autenticación
+    router.push("/login") // Redirige al login
+  }
+
+  const handleCartClick = () => {
+    if (!isAuthenticated) {
+      router.push("/login") // Redirige al login si no está autenticado
+      return
+    }
+    router.push("/cart") // Redirige al carrito si está autenticado
+  }
+
   return (
     <nav className="bg-gradient-to-r from-indigo-900 to-purple-800 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
@@ -20,43 +32,10 @@ const Navbar = () => {
             href="/"
             className="flex items-center space-x-2"
           >
-           
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               TechZone
             </span>
           </Link>
-
-          {/* Categorías */}
-          {/* <div className="hidden md:flex items-center space-x-6">
-            <Link
-              href="/category/phones"
-              className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
-            >
-              <FaMobileAlt />
-              <span>Celulares</span>
-            </Link>
-            <Link
-              href="/category/laptops"
-              className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
-            >
-              <FaLaptop />
-              <span>Laptops</span>
-            </Link>
-            <Link
-              href="/category/tablets"
-              className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
-            >
-              <FaTablet />
-              <span>Tablets</span>
-            </Link>
-            <Link
-              href="/category/accessories"
-              className="flex items-center space-x-1 hover:text-blue-400 transition-colors"
-            >
-              <FaHeadphones />
-              <span>Accesorios</span>
-            </Link>
-          </div> */}
 
           {/* Barra de búsqueda */}
           <div className="hidden md:flex flex-1 max-w-md mx-6">
@@ -72,18 +51,40 @@ const Navbar = () => {
 
           {/* Iconos de usuario y carrito */}
           <div className="flex items-center space-x-4">
-            <Link
-              href="/cart"
-              className="hover:text-purple-400 transition-colors"
-            >
-              <FaShoppingCart className="text-xl" />
-            </Link>
-            <Link
-              href="/dashboard"
-              className="hover:text-purple-400 transition-colors"
-            >
-              <FaUser className="text-xl" />
-            </Link>
+            {isAuthenticated && (
+              <button
+                onClick={handleCartClick}
+                className="hover:text-purple-400 transition-colors"
+              >
+                <FaShoppingCart className="text-xl" />
+              </button>
+            )}
+
+            {isAuthenticated ? (
+              // Opciones para usuarios autenticados
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/account"
+                  className="hover:text-purple-400 transition-colors"
+                >
+                  <FaUser className="text-xl" />
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition"
+                >
+                  Cerrar Sesión
+                </button>
+              </div>
+            ) : (
+              // Opción para usuarios no autenticados
+              <Link
+                href="/login"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+              >
+                Iniciar Sesión
+              </Link>
+            )}
           </div>
         </div>
       </div>

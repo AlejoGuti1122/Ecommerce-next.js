@@ -11,6 +11,7 @@ import {
   FaBoxOpen,
 } from "react-icons/fa"
 import { useState } from "react"
+import LogoutButton from "@/features/dashboard/components/Button"
 
 // Usuario de ejemplo
 const sampleUser: Iuser = {
@@ -185,18 +186,8 @@ const UserDashboard = () => {
               ))}
             </div>
           )}
-
-          {activeTab === "settings" && (
-            <div className="space-y-4">
-              <button className="w-full md:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                Editar Perfil
-              </button>
-              <button className="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
-                Cambiar Contraseña
-              </button>
-            </div>
-          )}
         </div>
+        <LogoutButton />
       </div>
     </div>
   )
