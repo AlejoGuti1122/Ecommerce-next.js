@@ -2,7 +2,7 @@ import { IProduct } from "@/interfaces"
 import axios from "axios"
 
 const axiosApiBack = axios.create({
-  baseURL: process.env.EXPRESS_API,
+  baseURL: process.env.NEXT_PUBLIC_EXPRESS_API,
 })
 
 export const getProducts = async (): Promise<IProduct[]> => {

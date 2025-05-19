@@ -21,7 +21,7 @@ export default async function PageProductDetail({ params }: Props) {
   }
 
   // Llamada al backend para obtener el producto
-  const res = await fetch(`${process.env.EXPRESS_API}/products/${productId}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_API}/products/${productId}`, {
     cache: "no-store", // Evita el almacenamiento en caché
   })
 

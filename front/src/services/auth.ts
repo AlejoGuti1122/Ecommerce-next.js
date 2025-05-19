@@ -1,7 +1,10 @@
+"use server"
+
 import axios from "axios"
-import Cookies from "js-cookie"
+
 import { IFormInput } from "../features/register/components/Register/index"
 import { ILoginInput } from "@/features/login/components/Login"
+import { Iuser } from "@/interfaces"
 
 const axiosApiBack = axios.create({
   baseURL: process.env.EXPRESS_API,
@@ -20,53 +23,48 @@ export const postRegister = async (data: IFormInput) => {
   }
 }
 
-// Interceptor para agregar el token a las solicitudes
-axiosApiBack.interceptors.request.use((config) => {
-  const token = Cookies.get("authToken")
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-})
+// // Interceptor para agregar el token a las solicitudes
+// axiosApiBack.interceptors.request.use((config) => {
+//   const token = Cookies.get("authToken")
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`
+//   }
+//   return config
+// })
 
-export const postLogin = async (data: ILoginInput) => {
+export const postLogin = async (
+  data: ILoginInput
+): Promise<{ token: string; user: Iuser }> => {
   try {
-    const res = await axiosApiBack.post("/login", data)
+    console.log("data , process.env.EXPRESS_API", data, process.env.EXPRESS_API) // Depuración
+    const res = await axiosApiBack.post("/users/login", data)
 
-    // Verifica si el backend devuelve un token y datos del usuario
-    const token = res.data.token
-    const user = res.data.user // Asegúrate de que el backend devuelva los datos del usuario
+    console.log("Respuesta completa del servidor:", res.data) // Depuración
 
-    if (token) {
-      // Guarda el token en una cookie
-      Cookies.set("authToken", token, { expires: 7 }) // Expira en 7 días
+    const token = res.data?.token
+    const user: Iuser = res.data?.user
 
-      // Guarda los datos del usuario en localStorage
-      localStorage.setItem("user", JSON.stringify(user))
+    if (token && user) {
+      const filteredUser: Iuser = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        address: user.address,
+        phone: user.phone,
+        role: user.role,
+        orders: user.orders,
+      }
+
+      localStorage.setItem("authToken", token)
+      localStorage.setItem("user", JSON.stringify(filteredUser))
+      return { token, user: filteredUser }
+    } else {
+      throw new Error(
+        "La respuesta del servidor no contiene el token o los datos del usuario."
+      )
     }
-
-    return res.data
   } catch (e) {
-    console.error("Ocurrió un error en el login", e)
-    throw e // Lanza el error para que el componente lo maneje
+    console.error("Error en postLogin:", e)
+    throw e
   }
-}
-
-// Verificar si el usuario está autenticado
-export const isAuthenticated = (): boolean => {
-  const token = Cookies.get("authToken")
-  return !!token // Devuelve true si el token existe
-}
-
-// Obtener los datos del usuario desde localStorage
-export const getUserData = () => {
-  const user = localStorage.getItem("user")
-  return user ? JSON.parse(user) : null
-}
-
-// Cerrar sesión
-export const logout = () => {
-  Cookies.remove("authToken") // Elimina el token de las cookies
-  localStorage.removeItem("user") // Elimina los datos del usuario de localStorage
-  console.log("Sesión cerrada.")
 }

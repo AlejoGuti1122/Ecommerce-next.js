@@ -1,18 +1,15 @@
 "use client"
 import Link from "next/link"
 import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
-import { logout } from "@/services/auth" // Importa la función de logout
 import { useRouter } from "next/navigation"
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
 
 const Navbar = () => {
-  const { isAuthenticated, setAuthenticated } = useAuth() // Accede al estado de autenticación
+  const { isAuthenticated, logout } = useAuth() // Obtén logout desde el contexto
   const router = useRouter()
 
   const handleLogout = () => {
-    logout() // Elimina la cookie del token
-    setAuthenticated(false) // Actualiza el estado de autenticación
-    router.push("/login") // Redirige al login
+    logout() // Llama a la función logout del contexto
   }
 
   const handleCartClick = () => {
@@ -64,7 +61,7 @@ const Navbar = () => {
               // Opciones para usuarios autenticados
               <div className="flex items-center space-x-4">
                 <Link
-                  href="/account"
+                  href="/dashboard"
                   className="hover:text-purple-400 transition-colors"
                 >
                   <FaUser className="text-xl" />

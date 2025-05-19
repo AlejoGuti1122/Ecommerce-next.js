@@ -2,8 +2,10 @@
 import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
-import { postLogin } from "@/services/auth" // Importa postLogin
+
+
 import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
+import { postLogin } from "@/services/service-auth"
 
 // Interfaz para los datos del formulario de login
 export interface ILoginInput {
@@ -39,7 +41,8 @@ export default function LoginPage() {
     }
 
     try {
-      const data = await postLogin(formData) // Llama a postLogin
+      const data = await postLogin(formData)
+      console.log("her") // Llama a postLogin
       setAuthenticated(true) // Actualiza el estado global de autenticación
       setUser(data.user) // Guarda los datos del usuario en el contexto
       toast.success("¡Inicio de sesión exitoso!")
