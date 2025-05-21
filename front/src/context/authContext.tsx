@@ -14,8 +14,10 @@ interface AuthContextType {
   isAuthenticated: boolean
   setAuthenticated: (value: boolean) => void
   user: Iuser | null
-  setUser: (user: Iuser | null) => void
+  token: string | null
+  setToken: (token: string | null) => void
   logout: () => void
+  saveUserData: (data: { user: Iuser; token: string }) => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -25,53 +27,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [isAuthenticated, setAuthenticated] = useState(false)
   const [user, setUser] = useState<Iuser | null>(null)
+  const [token, setToken] = useState<string | null>(null)
   const router = useRouter()
+
+  //Funcion donde guardo los datos del usuario que me devuelve el login
+  const saveUserData = (data: { user: Iuser; token: string }) => {
+    setUser(data.user)
+    setAuthenticated(true)
+    setToken(data.token)
+
+    // persistir datos en localStorage
+    localStorage.setItem("user", JSON.stringify(data))
+  }
 
   const logout = useCallback(() => {
     localStorage.removeItem("authToken")
     localStorage.removeItem("user")
     setAuthenticated(false)
     setUser(null)
+    setToken(null)
     router.push("/login")
   }, [router])
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken")
-    const storedUser = localStorage.getItem("user")
+    // Lógica para persistir los datos
+    const storage = JSON.parse(localStorage.getItem("user") || "{}")
+    console.log("user", storage)
 
-    if (token && storedUser) {
-      try {
-        const user = JSON.parse(storedUser)
-
-        // Filtra los datos del usuario para asegurarte de que coincidan con la interfaz Iuser
-        const filteredUser: Iuser = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          address: user.address,
-          phone: user.phone,
-          role: user.role,
-          orders: user.orders,
-        }
-
-        setAuthenticated(true)
-        setUser(filteredUser)
-      } catch (error) {
-        console.error("Error al parsear los datos del usuario:", error)
-        localStorage.removeItem("authToken")
-        localStorage.removeItem("user")
-        setAuthenticated(false)
-        setUser(null)
-        router.push("/login")
-      }
-    } else {
+    // Validar si los datos existen o están vacíos
+    if (storage === undefined || !Object.keys(storage)?.length) {
       setAuthenticated(false)
       setUser(null)
+      setToken(null)
+      return
     }
-  }, [router])
+
+    // Restaurar los datos desde el almacenamiento
+    const storageType = storage as any
+    setUser(storageType.user)
+    setAuthenticated(true)
+    setToken(storageType.token)
+  }, [])
+
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, setAuthenticated, user, setUser, logout }}
+      value={{
+        isAuthenticated,
+        setAuthenticated,
+        user,
+        saveUserData,
+        token,
+        setToken,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

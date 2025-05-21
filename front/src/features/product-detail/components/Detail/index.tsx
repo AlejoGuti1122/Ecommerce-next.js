@@ -1,19 +1,27 @@
 /* eslint-disable @next/next/no-img-element */
-"use client";
-import { useState } from "react";
-import { IProduct } from "@/interfaces";
-import { motion } from "framer-motion";
+"use client"
+import { useState } from "react"
+import { IProduct } from "@/interfaces"
+import { motion } from "framer-motion"
+import { useCart } from "@/context/cartContext" // Importa el hook
 
 interface ProductDetailProps {
-  product: IProduct;
+  product: IProduct
 }
 
 const Detail = ({ product }: ProductDetailProps) => {
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(1)
+  const { addProductToCart } = useCart() // Usa el hook para acceder a la función
 
-  const handleAddToCart = () => {
-    alert(`¡${quantity} ${product.name} agregado(s) al carrito!`);
-  };
+  const handleAddToCart = async () => {
+    try {
+      await addProductToCart(product.id) // Llama a la función del contexto
+      alert(`¡${quantity} ${product.name} agregado(s) al carrito!`)
+    } catch (error) {
+      console.error("Error al agregar el producto al carrito:", error)
+      alert("No se pudo agregar el producto al carrito.")
+    }
+  }
 
   return (
     <motion.div
@@ -44,19 +52,27 @@ const Detail = ({ product }: ProductDetailProps) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">{product.name}</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">
+            {product.name}
+          </h1>
           <p className="text-gray-600 text-lg mb-4">{product.description}</p>
-          <p className="text-2xl font-semibold text-blue-600 mb-4">${product.price}</p>
+          <p className="text-2xl font-semibold text-blue-600 mb-4">
+            ${product.price}
+          </p>
           <p className="text-sm text-gray-500 mb-4">
             Categoría: <span className="font-medium">{product.categoryId}</span>
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            Stock disponible: <span className="font-medium">{product.stock}</span>
+            Stock disponible:{" "}
+            <span className="font-medium">{product.stock}</span>
           </p>
 
           {/* Selector de cantidad */}
           <div className="flex items-center gap-4 mb-6">
-            <label htmlFor="quantity" className="text-gray-600">
+            <label
+              htmlFor="quantity"
+              className="text-gray-600"
+            >
               Cantidad:
             </label>
             <input
@@ -82,7 +98,7 @@ const Detail = ({ product }: ProductDetailProps) => {
         </motion.div>
       </div>
     </motion.div>
-  );
-};
+  )
+}
 
-export default Detail;
+export default Detail

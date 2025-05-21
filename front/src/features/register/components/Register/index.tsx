@@ -1,10 +1,10 @@
 "use client"
 import React, { useState } from "react"
-import { postRegister } from "@/services/auth"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
+import { postRegister } from "@/services/service-auth"
 
-export interface IFormInput {
+export interface IRegistrationForm {
   name: string
   email: string
   password: string
@@ -14,12 +14,18 @@ export interface IFormInput {
 
 const RegisterPage = () => {
   const router = useRouter()
-  const [formData, setFormData] = useState<IFormInput>({
-    name: "",
-    email: "",
-    password: "",
-    address: "",
-    phone: "",
+  const [formData, setFormData] = useState<IRegistrationForm>({
+    // name: "",
+    // email: "",
+    // password: "",
+    // address: "",
+    // phone: "",
+
+    name: "Lucía Fernández",
+    email: "lucia.fernandez@example.com",
+    password: "Segura123!",
+    address: "Av. Siempre Viva 742, Springfield",
+    phone: "3456789017",
   })
   const [error, setError] = useState("")
 
@@ -28,11 +34,9 @@ const RegisterPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const onSubmit = async (data: IFormInput) => {
-    console.log("Datos enviados:", data)
+  const onSubmit = async (data: IRegistrationForm) => {
     try {
-      const response = await postRegister(data)
-      console.log("Respuesta del registro:", response)
+      await postRegister(data)
 
       // Mostrar notificación de éxito
       toast.success("¡Registro exitoso!😁🎉😎🫡😌")

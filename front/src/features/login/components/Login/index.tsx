@@ -3,7 +3,6 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
 
-
 import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
 import { postLogin } from "@/services/service-auth"
 
@@ -15,10 +14,12 @@ export interface ILoginInput {
 
 export default function LoginPage() {
   const router = useRouter()
-  const { setAuthenticated, setUser } = useAuth() // Accede a setUser desde el contexto
+  const { saveUserData } = useAuth() // Accede a setUser desde el contexto
   const [formData, setFormData] = useState<ILoginInput>({
-    email: "",
-    password: "",
+    // email: "",
+    // password: "",
+    password: "Segura123!",
+    email: "lucia.fernandez@example.com",
   })
   const [error, setError] = useState("")
 
@@ -31,7 +32,7 @@ export default function LoginPage() {
   // Función para manejar el envío del formulario
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
+    console.log("formData a enviar:", formData)
     const { email, password } = formData
 
     if (!email || !password) {
@@ -42,9 +43,7 @@ export default function LoginPage() {
 
     try {
       const data = await postLogin(formData)
-      console.log("her") // Llama a postLogin
-      setAuthenticated(true) // Actualiza el estado global de autenticación
-      setUser(data.user) // Guarda los datos del usuario en el contexto
+      saveUserData(data) // Guarda los datos del usuario en el contexto
       toast.success("¡Inicio de sesión exitoso!")
       router.push("/") // Redirige al home o dashboard
     } catch (e) {
