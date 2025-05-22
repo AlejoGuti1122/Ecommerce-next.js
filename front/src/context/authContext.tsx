@@ -43,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = useCallback(() => {
     localStorage.removeItem("authToken")
     localStorage.removeItem("user")
+    localStorage.removeItem("cart")
     setAuthenticated(false)
     setUser(null)
     setToken(null)

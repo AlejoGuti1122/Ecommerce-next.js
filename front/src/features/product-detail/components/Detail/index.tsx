@@ -15,7 +15,7 @@ const Detail = ({ product }: ProductDetailProps) => {
 
   const handleAddToCart = async () => {
     try {
-      await addProductToCart(product.id) // Llama a la función del contexto
+      await addProductToCart(product) // Llama a la función del contexto
       alert(`¡${quantity} ${product.name} agregado(s) al carrito!`)
     } catch (error) {
       console.error("Error al agregar el producto al carrito:", error)
