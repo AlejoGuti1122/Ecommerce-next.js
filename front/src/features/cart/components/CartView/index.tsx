@@ -5,8 +5,11 @@ import { useEffect, useState } from "react"
 
 import CartItems from "../CartItems"
 import CheckoutOrder from "../CheckoutOrder"
+import usePrivate from "@/hooks/usePrivate"
 
 const CartView = () => {
+  usePrivate()
+
   const { cart, removeProductFromCart } = useCart()
   const [hydrated, setHydrated] = useState(false)
 

@@ -2,13 +2,13 @@ import { notFound } from "next/navigation"
 import Detail from "@/features/product-detail/components/Detail"
 
 type Props = {
-  params: {
-    slug: string[]
-  }
+  params: Promise<{
+    slug: string
+  }>
 }
 
 export default async function PageProductDetail({ params }: Props) {
-  const id = params?.slug?.[0]
+  const id = (await params)?.slug?.[0]
 
   if (!id) {
     return notFound()
@@ -21,9 +21,12 @@ export default async function PageProductDetail({ params }: Props) {
   }
 
   // Llamada al backend para obtener el producto
-  const res = await fetch(`${process.env.NEXT_PUBLIC_EXPRESS_API}/products/${productId}`, {
-    cache: "no-store", // Evita el almacenamiento en caché
-  })
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_EXPRESS_API}/products/${productId}`,
+    {
+      cache: "no-store", // Evita el almacenamiento en caché
+    }
+  )
 
   if (!res.ok) {
     return notFound()

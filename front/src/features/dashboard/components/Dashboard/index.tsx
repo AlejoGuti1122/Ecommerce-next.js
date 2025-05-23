@@ -6,8 +6,14 @@ import { useAuth } from "@/context/authContext"
 import { useEffect, useState } from "react"
 import { IOrder } from "@/interfaces"
 import { getUsersOrders } from "@/services/orders"
+import usePrivate from "@/hooks/usePrivate"
 
 export default function UserDashboard() {
+
+  usePrivate()
+
+
+
   const { user, token } = useAuth()
   const [orders, setOrders] = useState<IOrder[]>()
 

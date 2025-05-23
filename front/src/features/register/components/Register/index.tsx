@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "react-toastify"
 import { postRegister } from "@/services/service-auth"
+import usePublic from "@/hooks/usePublic"
 
 export interface IRegistrationForm {
   name: string
@@ -13,19 +14,17 @@ export interface IRegistrationForm {
 }
 
 const RegisterPage = () => {
+  //Proteccion de rutas
+  usePublic()
+
   const router = useRouter()
   const [formData, setFormData] = useState<IRegistrationForm>({
-    // name: "",
-    // email: "",
-    // password: "",
-    // address: "",
-    // phone: "",
+    name: "",
+    email: "",
+    password: "",
+    address: "",
+    phone: "",
 
-    name: "Lucía Fernández",
-    email: "lucia.fernandez@example.com",
-    password: "Segura123!",
-    address: "Av. Siempre Viva 742, Springfield",
-    phone: "3456789017",
   })
   const [error, setError] = useState("")
 

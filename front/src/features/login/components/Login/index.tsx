@@ -5,6 +5,7 @@ import { toast } from "react-toastify"
 
 import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
 import { postLogin } from "@/services/service-auth"
+import usePublic from "@/hooks/usePublic"
 
 // Interfaz para los datos del formulario de login
 export interface ILoginInput {
@@ -13,13 +14,14 @@ export interface ILoginInput {
 }
 
 export default function LoginPage() {
+  //Proteccion de rutas
+  usePublic()
+
   const router = useRouter()
   const { saveUserData } = useAuth() // Accede a setUser desde el contexto
   const [formData, setFormData] = useState<ILoginInput>({
-    // email: "",
-    // password: "",
-    password: "Segura123!",
-    email: "lucia.fernandez@example.com",
+    email: "",
+    password: "",
   })
   const [error, setError] = useState("")
 
