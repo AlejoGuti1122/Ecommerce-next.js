@@ -2,11 +2,12 @@
 
 import { useCart } from "@/context/cartContext"
 import { useEffect, useState } from "react"
-import { FaCreditCard } from "react-icons/fa"
+
 import CartItems from "../CartItems"
+import CheckoutOrder from "../CheckoutOrder"
 
 const CartView = () => {
-  const { total, cart, removeProductFromCart } = useCart()
+  const { cart, removeProductFromCart } = useCart()
   const [hydrated, setHydrated] = useState(false)
 
   // Asegúrate de que el componente esté hidratado en el cliente
@@ -26,9 +27,6 @@ const CartView = () => {
   }
 
   // Función para finalizar la compra
-  const onByClick = () => {
-    console.log("Finalizando compra...")
-  }
 
   // Cálculo del total basado en `cart`
   const calculatedCartTotal = cart.reduce(
@@ -55,18 +53,7 @@ const CartView = () => {
         >
           Tu Carrito
         </h1>
-        <button
-          disabled={total === 0}
-          onClick={onByClick}
-          className={`w-full bg-gradient-to-r from-blue-600 to-purple-600 
-            text-white py-3 rounded-lg font-medium shadow-md hover:shadow-lg
-            transform hover:scale-[1.02] transition-all duration-300
-            flex items-center justify-center space-x-2
-            ${total === 0 ? "opacity-50 cursor-not-allowed" : ""}`}
-        >
-          <FaCreditCard />
-          <span>Finalizar compra</span>
-        </button>
+        <CheckoutOrder />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Lista de Productos */}

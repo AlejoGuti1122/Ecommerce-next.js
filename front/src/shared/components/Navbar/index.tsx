@@ -3,10 +3,12 @@ import Link from "next/link"
 import { useAuth } from "@/context/authContext" // Importa el contexto de autenticación
 import { useRouter } from "next/navigation"
 import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
+import { useCart } from "@/context/cartContext"
 
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth() // Obtén logout desde el contexto
   const router = useRouter()
+  const { total } = useCart()
 
   const handleLogout = () => {
     logout() // Llama a la función logout del contexto
@@ -53,6 +55,7 @@ const Navbar = () => {
                 onClick={handleCartClick}
                 className="hover:text-purple-400 transition-colors"
               >
+                <span className="flex -mt-5">{total}</span>
                 <FaShoppingCart className="text-xl" />
               </button>
             )}

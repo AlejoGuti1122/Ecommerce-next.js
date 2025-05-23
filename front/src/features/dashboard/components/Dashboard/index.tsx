@@ -3,49 +3,28 @@
 import { FaUser, FaEnvelope, FaSignOutAlt } from "react-icons/fa"
 import LogoutButton from "../Button" // Asegúrate de que este componente esté marcado con "use client"
 import { useAuth } from "@/context/authContext"
+import { useEffect, useState } from "react"
+import { IOrder } from "@/interfaces"
+import { getUsersOrders } from "@/services/orders"
 
 export default function UserDashboard() {
-  // const [user, setUser] = useState<Iuser | null>(null)
-  // const [loading, setLoading] = useState(true)
-  // const router = useRouter()
-  const { user } = useAuth()
+  const { user, token } = useAuth()
+  const [orders, setOrders] = useState<IOrder[]>()
 
-  // useEffect(() => {
-  //   // Obtén el token desde localStorage
-  //   const token = localStorage.getItem("authToken")
+  useEffect(() => {
+    const request = async () => {
+      try {
+        const res = await getUsersOrders(token!)
+        setOrders(res)
+      } catch (e: any) {
+        console.warn("Error al obtener las ordenes", e.message)
+      }
+    }
 
-  //   if (!token) {
-  //     console.error("No se encontró el token en localStorage")
-  //     router.push("/login")
-  //     return
-  //   }
-
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const res = await fetch(`${process.env.EXPRESS_API}/user`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-
-  //       if (!res.ok) {
-  //         throw new Error("Error al obtener los datos del usuario")
-  //       }
-
-  //       const data = await res.json()
-  //       setUser(data)
-  //     } catch (error) {
-  //       console.error("Error al obtener los datos del usuario:", error)
-  //       router.push("/login")
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   fetchUserData()
-  // }, [router])
-
-  // if (loading) return <p className="text-center mt-10">Cargando dashboard...</p>
+    if (token) {
+      request()
+    }
+  }, [token])
 
   if (!user)
     return (
@@ -55,7 +34,7 @@ export default function UserDashboard() {
     )
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-6">
+    <div className="max-w-4xl mx-auto mt-10 px-6 py-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Bienvenido, {user.name}</h1>
         <LogoutButton />
@@ -86,6 +65,53 @@ export default function UserDashboard() {
           </div>
         </div>
       </div>
+      {orders?.length ? (
+        <div className="mt-10">
+          <h2 className="text-xl font-bold mb-4">Tus compras</h2>
+          <div className="space-y-6">
+            {orders.map((order) => (
+              <div
+                key={order.id}
+                className="bg-white p-6 rounded-lg shadow-md border border-gray-200"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h3 className="font-semibold text-lg">Orden #{order.id}</h3>
+                  <span className="text-sm text-gray-500">
+                    {new Date(order.date).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <p className="text-sm text-gray-600 mb-4">
+                  Estado: <span className="font-medium">{order.status}</span>
+                </p>
+
+                <div className="space-y-2">
+                  {order.products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="flex justify-between text-sm text-gray-700"
+                    >
+                      <span>{product.name}</span>
+                      <span>${product.price.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-4 font-semibold text-right">
+                  Total: $
+                  {order.products
+                    .reduce((acc, product) => acc + product.price, 0)
+                    .toFixed(2)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <p className="mt-10 text-center text-gray-500">
+          No tienes compras registradas.
+        </p>
+      )}
     </div>
   )
 }

@@ -1,5 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+"use client"
+
 import { FaTrash } from "react-icons/fa"
+import { useCart } from "@/context/cartContext" // 👈 importa tu contexto
 
 interface CartItemsProps {
   products: {
@@ -13,6 +16,12 @@ interface CartItemsProps {
 }
 
 const CartItems = ({ products, onRemove }: CartItemsProps) => {
+  const { checkoutLoader } = useCart() // 👈 accede al estado global
+
+  if (checkoutLoader) {
+    return <p>Loading...</p> // 👈 estado de carga real
+  }
+
   return (
     <>
       {products.map((product) => (
