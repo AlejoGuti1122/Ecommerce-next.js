@@ -1,25 +1,33 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
-import { useState } from "react"
+
 import { IProduct } from "@/interfaces"
 import { motion } from "framer-motion"
-import { useCart } from "@/context/cartContext" // Importa el hook
+import { useCart } from "@/context/cartContext"
+import { useAuth } from "@/context/authContext"
+import { toast } from "react-toastify"
+// 👈 importación agregada
 
 interface ProductDetailProps {
   product: IProduct
 }
 
 const Detail = ({ product }: ProductDetailProps) => {
-  const [quantity, setQuantity] = useState(1)
-  const { addProductToCart } = useCart() // Usa el hook para acceder a la función
+  const { addProductToCart } = useCart()
+  const { user } = useAuth() // 👈 obtiene el usuario
 
   const handleAddToCart = async () => {
+    if (!user) {
+      toast.error("Debes iniciar sesión para agregar productos al carrito.")
+      return
+    }
+
     try {
-      await addProductToCart(product) // Llama a la función del contexto
-      alert(`¡${quantity} ${product.name} agregado(s) al carrito!`)
+      await addProductToCart(product)
+      toast.success(`¡ ${product.name} agregado(s) al carrito!`)
     } catch (error) {
       console.error("Error al agregar el producto al carrito:", error)
-      alert("No se pudo agregar el producto al carrito.")
+      toast.error("No se pudo agregar el producto al carrito.")
     }
   }
 
@@ -68,32 +76,20 @@ const Detail = ({ product }: ProductDetailProps) => {
           </p>
 
           {/* Selector de cantidad */}
-          <div className="flex items-center gap-4 mb-6">
-            <label
-              htmlFor="quantity"
-              className="text-gray-600"
-            >
-              Cantidad:
-            </label>
-            <input
-              id="quantity"
-              type="number"
-              min="1"
-              max={product.stock}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-16 border rounded-lg text-center"
-            />
-          </div>
 
           {/* Botón de agregar al carrito */}
           <motion.button
             onClick={handleAddToCart}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700 transition-all"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            disabled={!user}
+            className={`px-6 py-3 rounded-lg shadow-md transition-all ${
+              user
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
+            }`}
+            whileHover={user ? { scale: 1.05 } : {}}
+            whileTap={user ? { scale: 0.95 } : {}}
           >
-            Agregar al carrito
+            {user ? "Agregar al carrito" : "Inicia sesión para comprar"}
           </motion.button>
         </motion.div>
       </div>
