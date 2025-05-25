@@ -12,19 +12,26 @@ interface AddToCartButtonProps {
 }
 
 const AddToCartButton = ({ product }: AddToCartButtonProps) => {
+  // Hook para manipular el carrito de compras
   const { addProductToCart } = useCart()
+  // Hook para obtener información del usuario autenticado
   const { user } = useAuth()
 
+  // Función que se ejecuta al hacer clic en el botón para agregar producto al carrito
   const handleAddToCart = async () => {
+    // Si no hay usuario autenticado, se muestra mensaje de error y se detiene la acción
     if (!user) {
       toast.error("Debes iniciar sesión para agregar productos al carrito.")
       return
     }
 
     try {
+      // Intentar agregar el producto al carrito usando el contexto
       await addProductToCart(product)
+      // Mostrar mensaje de éxito con el nombre del producto agregado
       toast.success(`¡${product.name} agregado(s) al carrito!`)
     } catch (error) {
+      // En caso de error, mostrar en consola y un mensaje de error al usuario
       console.error("Error al agregar el producto al carrito:", error)
       toast.error("No se pudo agregar el producto al carrito.")
     }

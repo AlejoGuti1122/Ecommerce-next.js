@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { FaTrash } from "react-icons/fa"
 import { useCart } from "@/context/cartContext" // 👈 importa tu contexto
 import { ImSpinner2 } from "react-icons/im"
 
@@ -16,7 +15,7 @@ interface CartItemsProps {
   onRemove: (productId: number) => void
 }
 
-const CartItems = ({ products, onRemove }: CartItemsProps) => {
+const CartItems = ({ products }: CartItemsProps) => {
   const { checkoutLoader } = useCart() // 👈 accede al estado global
 
   if (checkoutLoader) {
@@ -32,7 +31,7 @@ const CartItems = ({ products, onRemove }: CartItemsProps) => {
       {products.map((product) => (
         <div
           key={product.id}
-          className="bg-white rounded-lg shadow-lg overflow-hidden 
+          className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg shadow-lg overflow-hidden 
             hover:shadow-xl transition-shadow duration-300"
         >
           <div className="flex items-center p-4">
@@ -46,22 +45,15 @@ const CartItems = ({ products, onRemove }: CartItemsProps) => {
             </div>
 
             <div className="ml-4 flex-grow">
-              <h3 className="font-semibold text-lg text-gray-800">
+              <h3 className="font-semibold text-lg text-white">
                 {product.name}
               </h3>
-              <p className="text-gray-500 text-sm">{product.description}</p>
+              <p className="text-gray-400 text-sm">{product.description}</p>
 
               <div className="mt-2 flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <span className="font-bold text-lg">${product.price}</span>
+                  <span className="font-bold text-lg text-white">${product.price}</span>
                 </div>
-
-                <button
-                  onClick={() => onRemove(product.id)}
-                  className="text-red-500 hover:text-red-600 transition-colors"
-                >
-                  <FaTrash />
-                </button>
               </div>
             </div>
           </div>

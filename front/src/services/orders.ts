@@ -22,42 +22,58 @@ export interface DtoOrder {
  */
 export const postOrder = async (data: DtoOrder, token: string) => {
   try {
+    // Petición POST para crear la orden, enviando token en headers para autorización
     const res = await axiosApiBack.post("/orders", data, {
       headers: {
-        authorization: token, // token para autorización, sin "Bearer" porque el backend lo puede manejar así
+        authorization: token, // El backend maneja el token tal cual, sin "Bearer"
       },
     })
 
-    return res.data // retorno datos recibidos tras creación de la orden
-  } catch (e: any) {
-    // Logueamos el error para debugging
-    console.error("Ocurrio un error al crear una orden", e?.message)
-    // Lanzamos error con mensaje específico para manejo externo
+    // Retornar la respuesta con los datos de la orden creada
+    return res.data
+  } catch (e: unknown) {
+    // Para evitar usar 'any', usamos 'unknown' y luego validamos el tipo del error
+    if (e instanceof Error) {
+      // Si el error es instancia de Error, mostrar mensaje específico
+      console.error("Ocurrio un error al crear una orden", e.message)
+    } else {
+      // Si no es instancia de Error, mostrar el error tal cual para debugging
+      console.error("Ocurrio un error al crear una orden", e)
+    }
+    // Lanzamos un error con mensaje específico para manejo externo
     throw Error("ERROR_POST_ORDER")
   }
 }
 
 /**
  * Función para obtener todas las órdenes del usuario autenticado.
+ * Recibe el token de autorización.
+ *
  * @param token - Token JWT para autorización en la petición
- * @returns Datos con las órdenes del usuario (res.data)
- * @throws Error con mensaje "ERROR_ORDERS" si falla la petición
+ * @returns Lista de órdenes del usuario (res.data)
+ * @throws Error con mensaje "ERROR_ORDERS" si la petición falla
  */
 export const getUsersOrders = async (token: string) => {
   try {
+    // Petición GET para obtener las órdenes, enviando token en headers
     const res = await axiosApiBack.get("/users/orders", {
       headers: {
-        Authorization: token, // token para autorización
+        Authorization: token, // Token para autorización
       },
     })
 
+    // Si la respuesta existe, retornar los datos con las órdenes
     if (res) {
-      return res.data // retornamos las órdenes del usuario
+      return res.data
     }
-  } catch (e) {
-    // Logueamos error para debugging
-    console.log("Error en la orden🥶", (e as any)?.message)
-    // Lanzamos error para manejo en componente/función que llama este servicio
+  } catch (e: unknown) {
+    // Validamos el tipo del error para evitar usar 'any'
+    if (e instanceof Error) {
+      console.log("Error en la orden🥶", e.message)
+    } else {
+      console.log("Error en la orden🥶", e)
+    }
+    // Lanzamos un error para manejo en quien llame esta función
     throw new Error("ERROR_ORDERS")
   }
 }
