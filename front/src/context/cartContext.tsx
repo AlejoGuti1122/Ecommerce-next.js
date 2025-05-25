@@ -30,9 +30,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   // Estado para mostrar loader al hacer checkout
   const [checkoutLoader, setCheckoutLoader] = useState<boolean | undefined>()
 
-  // Estado para controlar si el carrito está cargando (p. ej. restaurando datos)
-  const [isLoading, setIsLoading] = useState<boolean>(true)
-
   /**
    * useEffect para restaurar el carrito y total guardados en localStorage
    * Solo corre al montar el componente
@@ -48,7 +45,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       setTotal(Number(storedTotal)) // Restauramos total si existe
     }
 
-    setIsLoading(false) // Ya cargamos el estado inicial
+    // Ya cargamos el estado inicial
   }, [])
 
   /**
@@ -109,8 +106,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         resetCart,
       }}
     >
-      {/* Mientras carga, muestra un mensaje; luego renderiza los hijos */}
-      {isLoading ? <div>Cargando carrito...</div> : children}
+      {children}
     </CartContext.Provider>
   )
 }

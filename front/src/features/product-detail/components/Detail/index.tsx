@@ -3,34 +3,13 @@
 
 import { IProduct } from "@/interfaces"
 import { motion } from "framer-motion"
-import { useCart } from "@/context/cartContext"
-import { useAuth } from "@/context/authContext"
-import { toast } from "react-toastify"
-// 👈 importación agregada
+import AddToCartButton from "../ButtonAdd"
 
 interface ProductDetailProps {
   product: IProduct
 }
 
 const Detail = ({ product }: ProductDetailProps) => {
-  const { addProductToCart } = useCart()
-  const { user } = useAuth() // 👈 obtiene el usuario
-
-  const handleAddToCart = async () => {
-    if (!user) {
-      toast.error("Debes iniciar sesión para agregar productos al carrito.")
-      return
-    }
-
-    try {
-      await addProductToCart(product)
-      toast.success(`¡ ${product.name} agregado(s) al carrito!`)
-    } catch (error) {
-      console.error("Error al agregar el producto al carrito:", error)
-      toast.error("No se pudo agregar el producto al carrito.")
-    }
-  }
-
   return (
     <motion.div
       className="bg-white border rounded-xl p-6 shadow-lg max-w-4xl mx-auto"
@@ -75,22 +54,8 @@ const Detail = ({ product }: ProductDetailProps) => {
             <span className="font-medium">{product.stock}</span>
           </p>
 
-          {/* Selector de cantidad */}
-
           {/* Botón de agregar al carrito */}
-          <motion.button
-            onClick={handleAddToCart}
-            disabled={!user}
-            className={`px-6 py-3 rounded-lg shadow-md transition-all ${
-              user
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-gray-400 text-gray-200 cursor-not-allowed"
-            }`}
-            whileHover={user ? { scale: 1.05 } : {}}
-            whileTap={user ? { scale: 0.95 } : {}}
-          >
-            {user ? "Agregar al carrito" : "Inicia sesión para comprar"}
-          </motion.button>
+          <AddToCartButton product={product} />
         </motion.div>
       </div>
     </motion.div>
