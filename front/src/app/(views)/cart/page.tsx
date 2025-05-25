@@ -1,5 +1,3 @@
-"use client"
-
 import CartView from "@/features/cart/components/CartView"
 import React from "react"
 

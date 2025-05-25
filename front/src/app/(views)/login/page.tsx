@@ -1,12 +1,7 @@
-import LoginPage from '@/features/login/components/Login'
-import React from 'react'
+import LoginPage from "@/features/login/components/Login"
 
 const page = () => {
-  return (
-    <div>
-      <LoginPage />
-    </div>
-  )
+  return <LoginPage />
 }
 
 export default page

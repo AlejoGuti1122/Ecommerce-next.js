@@ -2,42 +2,44 @@
 
 import { useCart } from "@/context/cartContext"
 import { useEffect, useState } from "react"
-
 import CartItems from "../CartItems"
 import CheckoutOrder from "../CheckoutOrder"
 import usePrivate from "@/hooks/usePrivate"
 
 const CartView = () => {
+  // Hook personalizado que probablemente verifica si el usuario está autenticado antes de mostrar la vista
   usePrivate()
 
+  // Trae el carrito y la función para eliminar productos del contexto global
   const { cart, removeProductFromCart } = useCart()
+
+  // Estado para saber si el componente ya está montado (hidratado) en el cliente
   const [hydrated, setHydrated] = useState(false)
 
-  // Asegúrate de que el componente esté hidratado en el cliente
+  // useEffect se usa aquí para marcar el componente como "hidratado" una vez que se monta en el cliente
   useEffect(() => {
     setHydrated(true)
   }, [])
 
-  // Mostrar un estado de carga mientras se hidrata el componente
+  // Si el componente aún no está hidratado, se muestra un mensaje de carga
   if (!hydrated) {
     return <div>Cargando...</div>
   }
 
-  // Función para manejar la eliminación de un producto del carrito
+  // Función que se ejecuta al hacer clic en "Eliminar" un producto del carrito
+  // Muestra en consola el ID del producto eliminado y llama a removeProductFromCart para eliminarlo del contexto
   const onTrashClick = (id: number) => {
     console.log(`Producto con ID ${id} eliminado del carrito.`)
     removeProductFromCart(id)
   }
 
-  // Función para finalizar la compra
-
-  // Cálculo del total basado en `cart`
+  // Calcula el total del carrito sumando los precios de todos los productos
   const calculatedCartTotal = cart.reduce(
     (acc, product) => acc + product.price,
     0
   )
 
-  // Mostrar mensaje si el carrito está vacío
+  // Si el carrito está vacío, muestra un mensaje centrado
   if (cart.length === 0) {
     return (
       <div className="text-center py-8 text-gray-500">
@@ -57,7 +59,9 @@ const CartView = () => {
           Tu Carrito
         </h1>
         <CheckoutOrder />
+        {/* Botón o acción de finalizar compra */}
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Lista de Productos */}
         <div className="lg:col-span-2 space-y-4">
@@ -65,7 +69,11 @@ const CartView = () => {
             products={cart}
             onRemove={() => null}
           />
+          {/* Este componente muestra los productos. 
+              Nota: El prop `onRemove` se pasa como función vacía aquí. 
+              Probablemente no se está usando internamente o se maneja en otro lugar. */}
         </div>
+
         {/* Resumen de Compra */}
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-4">
@@ -86,12 +94,16 @@ const CartView = () => {
                   </button>
                 </div>
               ))}
+              {/* Renderiza cada producto con su nombre y un botón para eliminarlo */}
             </div>
 
             <div className="h-px bg-gray-200 my-2"></div>
+            {/* Línea divisoria visual */}
+
             <div className="flex justify-between text-lg font-bold">
               <span>Total</span>
               <span className="text-blue-600">${calculatedCartTotal}</span>
+              {/* Muestra el total calculado del carrito */}
             </div>
           </div>
         </div>
@@ -101,3 +113,4 @@ const CartView = () => {
 }
 
 export default CartView
+// Exporta el componente para ser usado en una ruta como /cart

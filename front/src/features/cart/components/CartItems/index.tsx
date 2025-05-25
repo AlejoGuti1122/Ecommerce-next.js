@@ -3,6 +3,7 @@
 
 import { FaTrash } from "react-icons/fa"
 import { useCart } from "@/context/cartContext" // 👈 importa tu contexto
+import { ImSpinner2 } from "react-icons/im"
 
 interface CartItemsProps {
   products: {
@@ -19,7 +20,11 @@ const CartItems = ({ products, onRemove }: CartItemsProps) => {
   const { checkoutLoader } = useCart() // 👈 accede al estado global
 
   if (checkoutLoader) {
-    return <p>Loading...</p> // 👈 estado de carga real
+    return (
+      <div className="flex justify-center items-center p-10">
+        <ImSpinner2 className="animate-spin text-4xl text-blue-600" />
+      </div>
+    )
   }
 
   return (

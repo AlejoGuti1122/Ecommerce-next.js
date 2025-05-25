@@ -6,20 +6,29 @@ import { FaShoppingCart, FaUser, FaSearch } from "react-icons/fa"
 import { useCart } from "@/context/cartContext"
 
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth() // Obtén logout desde el contexto
+  // Obtenemos si el usuario está autenticado y la función logout desde el contexto de autenticación
+  const { isAuthenticated, logout } = useAuth()
+
+  // Hook para redireccionar programáticamente a otra ruta (como ir a otra página con código)
   const router = useRouter()
+
+  // Obtenemos el total de productos en el carrito desde el contexto del carrito
   const { total } = useCart()
 
+  // Función que se ejecuta cuando el usuario hace clic en "Cerrar sesión"
   const handleLogout = () => {
-    logout() // Llama a la función logout del contexto
+    logout() // Llama a la función `logout` del contexto, que borra el token y estado de usuario
   }
 
+  // Función que se ejecuta al hacer clic en el ícono del carrito
   const handleCartClick = () => {
     if (!isAuthenticated) {
-      router.push("/login") // Redirige al login si no está autenticado
+      // Si el usuario NO está autenticado, redirige al login
+      router.push("/login")
       return
     }
-    router.push("/cart") // Redirige al carrito si está autenticado
+    // Si el usuario está autenticado, redirige al carrito
+    router.push("/cart")
   }
 
   return (
