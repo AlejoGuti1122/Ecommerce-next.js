@@ -46,7 +46,7 @@ const productsToPreLoad: IProduct[] = [
     name: "Apple Watch Series 6",
     price: 399,
     description:
-      "Stay connected and healthy with the Apple Watch Series 6: track your workouts, monitor your health, and stay in touch with the people and information you care about most. Experience the future of health and wellness with the Apple Watch Series 6.",
+      "Stay connected and healthy with the Apple Watch Series 6: track your workouts, monitor your health, and stay in touch with the people and information you care most. Experience the future of health and wellness with the Apple Watch Series 6.",
     image:
       "https://cdn-ipoint.waugi.com.ar/img/cms/landings-fichas/Watch/Watch%20Series%206/RX-S3_Smart_1-2-2.png",
     categoryId: 4,
