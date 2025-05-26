@@ -4,7 +4,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa"
 
 const Footer = () => {
   return (
-    <footer className="bg-gradient-to-r from-indigo-900 to-purple-800 text-white mt-8">
+    <footer className="bg-gradient-to-r from-indigo-900 to-purple-800 text-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Columna 1 - Información de la empresa */}
