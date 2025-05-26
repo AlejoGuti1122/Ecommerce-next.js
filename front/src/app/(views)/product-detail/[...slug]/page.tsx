@@ -5,9 +5,9 @@ import Detail from "@/features/product-detail/components/Detail"
 // Importa el componente `Detail` que muestra los detalles del producto (posiblemente una ficha con imagen, descripción, etc.)
 
 type Props = {
-  params: Promise<{
-    slug: string
-  }>
+  params: {
+    slug: string[]
+  }
 }
 // Define el tipo de `props` que este componente recibe desde el sistema de rutas dinámicas de Next.js.
 // En este caso, se espera que `params` sea una promesa que al resolverse tenga un `slug`.
@@ -15,7 +15,7 @@ type Props = {
 // Es importante que uses `[slug]` o `[...slug]` en la carpeta para que esto funcione.
 
 export default async function PageProductDetail({ params }: Props) {
-  const id = (await params)?.slug?.[0]
+  const id = params?.slug?.[0]
   // Se espera que `params` sea una promesa, por eso la esperamos con `await`.
   // Luego accedemos al primer elemento del slug como el ID del producto.
   // Ejemplo: si la URL es `/products/12`, entonces `slug[0]` es `"12"`.
