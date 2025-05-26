@@ -42,17 +42,23 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
             <div className="flex space-x-4">
               <a
-                href="#"
+                href="https://github.com/AlejoGuti1122"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-300 hover:text-white"
               >
                 <FaGithub className="text-2xl" />
               </a>
+
               <a
-                href="#"
+                href="https://www.linkedin.com/in/alejandro-guti%C3%A9rrez-9a88a6267/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-300 hover:text-white"
               >
                 <FaLinkedin className="text-2xl" />
               </a>
+
               <a
                 href="#"
                 className="text-gray-300 hover:text-white"
