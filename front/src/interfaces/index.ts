@@ -42,3 +42,15 @@ export interface Iuser {
   role: eRole // "admin" | "user"
   orders: IOrder[]
 }
+
+export interface ILoginInput {
+  email: string
+  password: string
+}
+
+export interface IRegistrationForm {
+  name: string
+  email: string
+  password: string
+  confirmPassword?: string
+}

@@ -7,13 +7,8 @@ import { toast } from "react-toastify"
 import { useAuth } from "@/context/authContext"
 import { postLogin } from "@/services/service-auth"
 import usePublic from "@/hooks/usePublic"
+import { ILoginInput } from "@/interfaces"
 
-export interface ILoginInput {
-  email: string
-  password: string
-}
-
-// Componente de formulario para iniciar sesión
 export default function LoginForm() {
   usePublic() // Hook personalizado que probablemente redirige al usuario si ya está autenticado
 

@@ -1,7 +1,8 @@
 "use server"
 
-import { ILoginInput } from "@/features/login/components/Login"
+
 import { IRegistrationForm } from "@/features/register/components/RegisterForm"
+import { ILoginInput } from "@/interfaces"
 
 import axios from "axios"
 
